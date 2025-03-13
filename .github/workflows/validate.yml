@@ -15,14 +15,16 @@ jobs:
           distribution: "temurin"
           java-version: 17
           cache: "maven"
-
-      - name: Build and analyze
+      - name: Build
+        run: mvn install
+      - name: Analyze
+        if: ${{ hashFiles('src/') != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.organization=wakamiti \
-          -Dsonar.projectKey=wakamiti \
+          -Dsonar.projectKey=wakamiti-parent \
           -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
