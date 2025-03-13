@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.project.url.inherit.append.path="false">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        This POM is used as a parent for any Wakamiti component in order to share the build process
+        and some other global properties (organization, etc.).
+
+        The version number will always be the same regardless of the versions of the components.
+    -->
+
+    <!-- coordinates -->
+    <groupId>es.wakamiti</groupId>
+    <artifactId>wakamiti-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <!-- additional information -->
+    <name>Wakamiti Parent</name>
+    <description>Parent POM for sharing build configuration among Wakamiti components</description>
+    <url>https://github.com/wakamiti/${project.repository}</url>
+    <inceptionYear>2025</inceptionYear>
+
+    <organization>
+        <name>ITI - Instituto Tecnológico de Informática</name>
+        <url>https://www.iti.es</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>MPL-2.0</name>
+            <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+        </license>
+    </licenses>
+
+    <scm child.scm.url.inherit.append.path="false" child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false">
+        <url>https://github.com/wakamiti/${project.repository}</url>
+        <connection>scm:git:git://github.com/wakamiti/${project.repository}.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/wakamiti/${project.repository}.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>http://github.com/wakamiti/.github/issues</url>
+    </issueManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Central Repository OSSRH</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/wakamiti/${project.repository}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>María Galbis</name>
+            <email>mgalbis@iti.es</email>
+            <url>https://github.com/mgalbis</url>
+            <properties>
+                <picUrl>https://avatars.githubusercontent.com/u/3009316?s=60</picUrl>
+            </properties>
+        </developer>
+        <developer>
+            <name>Carlos Oliva</name>
+            <email>coliva@iti.es</email>
+            <url>https://github.com/colivami</url>
+            <properties>
+                <picUrl>https://avatars.githubusercontent.com/u/1437338?s=60</picUrl>
+            </properties>
+        </developer>
+        <developer>
+            <name>Julio Montero</name>
+            <email>jmontero@iti.es</email>
+            <url>https://github.com/jmonteroiti</url>
+            <properties>
+                <picUrl>https://avatars.githubusercontent.com/u/185466948?s=60</picUrl>
+            </properties>
+        </developer>
+    </developers>
+
+    <properties>
+        <!-- encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- build versions -->
+        <java.version>17</java.version>
+        <maven.version>3.8.6</maven.version>
+        <maven.resources.version>3.3.1</maven.resources.version>
+        <maven.compiler.version>3.13.0</maven.compiler.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Test execution -->
+        <maven.surefire.version>3.5.1</maven.surefire.version>
+        <maven.failsafe.version>3.5.2</maven.failsafe.version>
+        <test.args>
+            -XX:+EnableDynamicAgentLoading
+            -Dfile.encoding=${project.build.sourceEncoding}
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.lang=ALL-UNNAMED
+        </test.args>
+        <surefire.pattern>**/*Test.java</surefire.pattern>
+        <failsafe.pattern>**/*IT.java</failsafe.pattern>
+
+        <!-- plugin versions -->
+        <jacoco.version>0.8.12</jacoco.version>
+        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <surefire.report.version>2.6</surefire.report.version>
+<!--        <maven.info.reports.version>3.0.0</maven.info.reports.version>-->
+        <maven.jar.plugin.version>3.0.0</maven.jar.plugin.version>
+        <exists-maven-plugin.version>0.11.0</exists-maven-plugin.version>
+
+        <!-- sonar cloud -->
+        <sonar.organization>iti-ict</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+        <!-- -->
+        <project.repository>wakamiti-parent</project.repository>
+    </properties>
+
+
+
+    <!-- basic build features -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                        <verbose>${verbose}</verbose>
+                        <compilerArgs>
+                            <arg>-Xlint:-missing-explicit-ctor</arg>
+                        </compilerArgs>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.version}</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- dependency convergence enforce -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>enforce</id>
+                            <configuration>
+                                <rules>
+                                    <dependencyConvergence>
+                                        <excludedScopes>
+                                            <scope>test</scope>
+                                        </excludedScopes>
+                                    </dependencyConvergence>
+                                    <requireMavenVersion>
+                                        <version>${maven.version}</version>
+                                    </requireMavenVersion>
+                                </rules>
+                            </configuration>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Surefire with JaCoCo agent -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.version}</version>
+                    <configuration>
+                        <argLine>@{surefireJacocoAgent} ${test.args}</argLine>
+                        <includes>
+                            <include>${surefire.pattern}</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+
+                <!-- Failsafe with JaCoCo agent -->
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                            <configuration>
+                                <argLine>@{failsafeJacocoAgent} ${test.args}</argLine>
+                                <includes>
+                                    <include>${failsafe.pattern}</include>
+                                </includes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- JaCoCo coverage -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <id>pre-unit-test</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <append>true</append>
+                                <destFile>${project.build.directory}/jacoco.exec</destFile>
+                                <propertyName>surefireJacocoAgent</propertyName>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>pre-integration-test</id>
+                            <goals>
+                                <goal>prepare-agent-integration</goal>
+                            </goals>
+                            <configuration>
+                                <append>true</append>
+                                <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                                <propertyName>failsafeJacocoAgent</propertyName>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>generate-test-report</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- flatten prior install, required since ${revision} is used -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.7.0</version>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>flatten-clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <updatePomFile>true</updatePomFile>
+                        <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    </configuration>
+                </plugin>
+
+                <!-- Skip deploy artifacts -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                    <inherited>false</inherited>
+                </plugin>
+
+                <!-- dependency info report -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.1.2</version>
+                    <executions>
+                        <execution>
+                            <phase>pre-site</phase>
+                            <goals>
+                                <goal>dependencies</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- test info report -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>2.18.1</version>
+                    <executions>
+                        <execution>
+                            <phase>pre-site</phase>
+                            <goals>
+                                <goal>report-only</goal>
+                                <goal>failsafe-report-only</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- specific version of maven compiler -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <!-- dependency convergence enforce -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <!-- Surefire with JaCoCo agent -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <!-- Failsafe with JaCoCo agent -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <!-- JaCoCo coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <!-- dependency info report -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-site-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-project-info-reports-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--            &lt;!&ndash; test info report &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-report-plugin</artifactId>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
+
+
+    <profiles>
+        <!-- display available updates -->
+        <profile>
+            <id>check-updates</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>2.16.0</version>
+                        <configuration>
+                            <allowMajorUpdates>false</allowMajorUpdates>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>display-dependency-updates</goal>
+                                    <goal>display-plugin-updates</goal>
+                                    <goal>display-property-updates</goal>
+                                    <goal>display-parent-updates</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+        <!-- The sonatype profile is used to deploy artifacts to the Sonatype repository -->
+        <profile>
+            <id>sonatype</id>
+            <build>
+                <plugins>
+                    <!-- This plugin disables the deployment for artifacts that already exists -->
+                    <plugin>
+                        <groupId>org.honton.chas</groupId>
+                        <artifactId>exists-maven-plugin</artifactId>
+                        <version>${exists-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>remote</goal>
+                                </goals>
+                                <configuration>
+                                    <repository>https://repo.maven.apache.org/maven2/</repository>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- generate additional jar with sources -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven.source.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- generate javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <failOnWarnings>false</failOnWarnings>
+                            <verbose>false</verbose>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Sign the artifacts in order to deploy them -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+    <!-- Share versions of some common dependencies -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.15.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
