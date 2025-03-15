@@ -43,7 +43,7 @@
 
     <scm child.scm.url.inherit.append.path="false" child.scm.connection.inherit.append.path="false"
          child.scm.developerConnection.inherit.append.path="false">
-        <url>https://github.com/wakamiti/${project.repository}</url>
+        <url>git://github.com/wakamiti/${project.repository}.git</url>
         <connection>scm:git:git://github.com/wakamiti/${project.repository}.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/wakamiti/${project.repository}.git</developerConnection>
         <tag>HEAD</tag>
