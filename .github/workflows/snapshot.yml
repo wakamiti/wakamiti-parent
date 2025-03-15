@@ -14,6 +14,7 @@ jobs:
 
   deploy:
     name: Publish Snapshot Package
+    needs: validate
     permissions:
       contents: read
       packages: write
