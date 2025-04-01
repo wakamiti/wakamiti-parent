@@ -6,6 +6,4 @@ on:
 jobs:
   validate:
     uses: wakamiti/wakamiti-github-actions/.github/workflows/validate.yml@main
-    with:
-      repo: ${{ github.event.repository.name }}
     secrets: inherit
