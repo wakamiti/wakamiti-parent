@@ -134,7 +134,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- -->
-        <project.repository>wakamiti-parent</project.repository>
+        <project.repository>${project.artifactId}</project.repository>
     </properties>
 
 
