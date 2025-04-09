@@ -4,6 +4,12 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  config:
+    name: Maven Configuration
+    uses: wakamiti/wakamiti-github-actions/.github/workflows/maven.yml@main
+    secrets: inherit
+
   validate:
+    name: Validate Code
     uses: wakamiti/wakamiti-github-actions/.github/workflows/validate.yml@main
     secrets: inherit
