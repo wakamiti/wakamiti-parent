@@ -54,20 +54,6 @@
         <url>http://github.com/wakamiti/.github/issues</url>
     </issueManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/wakamiti/${project.repository}</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
-
     <developers>
         <developer>
             <name>María Galbis</name>
@@ -126,7 +112,7 @@
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <surefire.report.version>2.6</surefire.report.version>
-<!--        <maven.info.reports.version>3.0.0</maven.info.reports.version>-->
+        <!--        <maven.info.reports.version>3.0.0</maven.info.reports.version>-->
         <maven.jar.plugin.version>3.0.0</maven.jar.plugin.version>
         <exists-maven-plugin.version>0.14.0</exists-maven-plugin.version>
 
@@ -135,7 +121,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- -->
-        <project.repository>${project.artifactId}</project.repository>
+        <project.repository>wakamiti-parent</project.repository>
     </properties>
 
 
@@ -325,6 +311,23 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.7.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>${maven.server}</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <centralSnapshotsUrl>${maven.snapshots}</centralSnapshotsUrl>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>deploy</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -354,19 +357,23 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <!-- dependency info report -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-site-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-project-info-reports-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--            &lt;!&ndash; test info report &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-surefire-report-plugin</artifactId>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-site-plugin</artifactId>-->
+            <!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-project-info-reports-plugin</artifactId>-->
+            <!--            </plugin>-->
+            <!--            &lt;!&ndash; test info report &ndash;&gt;-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-surefire-report-plugin</artifactId>-->
+            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -401,9 +408,9 @@
         </profile>
 
 
-        <!-- The sonatype profile is used to deploy artifacts to the Sonatype repository -->
+        <!-- The release profile is used to deploy artifacts to the Sonatype repository -->
         <profile>
-            <id>sonatype</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <!-- This plugin disables the deployment for artifacts that already exists -->
@@ -413,11 +420,35 @@
                         <version>${exists-maven-plugin.version}</version>
                         <executions>
                             <execution>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>remote</goal>
                                 </goals>
                                 <configuration>
                                     <repository>https://repo.maven.apache.org/maven2/</repository>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-no-snapshots</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireReleaseDeps>
+                                            <message>No Snapshots Allowed!</message>
+                                        </requireReleaseDeps>
+                                    </rules>
+                                    <fail>true</fail>
                                 </configuration>
                             </execution>
                         </executions>
@@ -435,6 +466,7 @@
                                 </goals>
                             </execution>
                             <execution>
+                                <phase>install</phase>
                                 <id>attach-sources</id>
                                 <goals>
                                     <goal>jar-no-fork</goal>
@@ -455,6 +487,7 @@
                         </configuration>
                         <executions>
                             <execution>
+                                <phase>install</phase>
                                 <id>attach-javadocs</id>
                                 <goals>
                                     <goal>jar</goal>
@@ -470,11 +503,17 @@
                         <version>3.2.7</version>
                         <executions>
                             <execution>
+                                <phase>install</phase>
                                 <id>sign-artifacts</id>
-                                <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
