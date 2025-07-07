@@ -54,6 +54,15 @@
         <url>http://github.com/wakamiti/.github/issues</url>
     </issueManagement>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/wakamiti/${project.repository}</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <developers>
         <developer>
             <name>María Galbis</name>
