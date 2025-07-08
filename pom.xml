@@ -97,7 +97,7 @@
 
         <!-- build versions -->
         <java.version>17</java.version>
-        <maven.version>3.8.8</maven.version>
+        <maven.version>3.9.9</maven.version>
         <maven.resources.version>3.3.1</maven.resources.version>
         <maven.compiler.version>3.14.0</maven.compiler.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -105,8 +105,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Test execution -->
-        <maven.surefire.version>3.5.2</maven.surefire.version>
-        <maven.failsafe.version>3.5.2</maven.failsafe.version>
+        <maven.surefire.version>3.5.3</maven.surefire.version>
+        <maven.failsafe.version>3.5.3</maven.failsafe.version>
         <test.args>
             -XX:+EnableDynamicAgentLoading
             -Dfile.encoding=${project.build.sourceEncoding}
@@ -117,13 +117,12 @@
         <failsafe.pattern>**/*IT.java</failsafe.pattern>
 
         <!-- plugin versions -->
-        <jacoco.version>0.8.12</jacoco.version>
+        <jacoco.version>0.8.13</jacoco.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <surefire.report.version>2.6</surefire.report.version>
         <!--        <maven.info.reports.version>3.0.0</maven.info.reports.version>-->
         <maven.jar.plugin.version>3.0.0</maven.jar.plugin.version>
-        <exists-maven-plugin.version>0.14.0</exists-maven-plugin.version>
 
         <!-- sonar cloud -->
         <sonar.organization>iti-ict</sonar.organization>
@@ -165,7 +164,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <executions>
                         <execution>
                             <id>enforce</id>
@@ -263,7 +262,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
-                    <version>1.7.0</version>
+                    <version>1.7.1</version>
                     <executions>
                         <execution>
                             <id>flatten</id>
@@ -309,7 +308,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>3.5.3</version>
                     <executions>
                         <execution>
                             <phase>pre-site</phase>
@@ -317,23 +316,6 @@
                                 <goal>report-only</goal>
                                 <goal>failsafe-report-only</goal>
                             </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.7.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <publishingServerId>${maven.server}</publishingServerId>
-                        <autoPublish>true</autoPublish>
-                        <centralSnapshotsUrl>${maven.snapshots}</centralSnapshotsUrl>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>deploy</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -379,10 +361,6 @@
             <!--                <groupId>org.apache.maven.plugins</groupId>-->
             <!--                <artifactId>maven-surefire-report-plugin</artifactId>-->
             <!--            </plugin>-->
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-            </plugin>
         </plugins>
     </build>
 
@@ -426,7 +404,7 @@
                     <plugin>
                         <groupId>org.honton.chas</groupId>
                         <artifactId>exists-maven-plugin</artifactId>
-                        <version>${exists-maven-plugin.version}</version>
+                        <version>0.15.0</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -443,7 +421,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.6.0</version>
                         <executions>
                             <execution>
                                 <id>enforce-no-snapshots</id>
@@ -509,7 +487,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
+                        <version>3.2.8</version>
                         <executions>
                             <execution>
                                 <phase>install</phase>
@@ -526,6 +504,21 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -538,7 +531,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.17.2</version>
+                <version>1.17.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
