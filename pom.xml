@@ -68,25 +68,16 @@
             <name>María Galbis</name>
             <email>mgalbis@iti.es</email>
             <url>https://github.com/mgalbis</url>
-            <properties>
-                <picUrl>https://avatars.githubusercontent.com/u/3009316?s=60</picUrl>
-            </properties>
         </developer>
         <developer>
             <name>Carlos Oliva</name>
             <email>coliva@iti.es</email>
             <url>https://github.com/colivami</url>
-            <properties>
-                <picUrl>https://avatars.githubusercontent.com/u/1437338?s=60</picUrl>
-            </properties>
         </developer>
         <developer>
             <name>Julio Montero</name>
             <email>jmontero@iti.es</email>
             <url>https://github.com/jmonteroiti</url>
-            <properties>
-                <picUrl>https://avatars.githubusercontent.com/u/185466948?s=60</picUrl>
-            </properties>
         </developer>
     </developers>
 
@@ -121,7 +112,7 @@
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <surefire.report.version>2.6</surefire.report.version>
-        <!--        <maven.info.reports.version>3.0.0</maven.info.reports.version>-->
+        <maven-enforcer-plugin.version>3.6.0</maven-enforcer-plugin.version>
         <maven.jar.plugin.version>3.0.0</maven.jar.plugin.version>
 
         <!-- sonar cloud -->
@@ -164,7 +155,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven-enforcer-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>enforce</id>
@@ -284,41 +275,6 @@
                         <flattenMode>resolveCiFriendliesOnly</flattenMode>
                     </configuration>
                 </plugin>
-
-                <!-- dependency info report -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.20.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.9.0</version>
-                    <executions>
-                        <execution>
-                            <phase>pre-site</phase>
-                            <goals>
-                                <goal>dependencies</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- test info report -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.3</version>
-                    <executions>
-                        <execution>
-                            <phase>pre-site</phase>
-                            <goals>
-                                <goal>report-only</goal>
-                                <goal>failsafe-report-only</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -347,20 +303,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
-            <!-- dependency info report -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-site-plugin</artifactId>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-project-info-reports-plugin</artifactId>-->
-            <!--            </plugin>-->
-            <!--            &lt;!&ndash; test info report &ndash;&gt;-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-surefire-report-plugin</artifactId>-->
-            <!--            </plugin>-->
         </plugins>
     </build>
 
@@ -421,7 +363,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.6.0</version>
+                        <version>${maven-enforcer-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>enforce-no-snapshots</id>
@@ -467,11 +409,11 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
-                        <configuration>
-                            <failOnError>false</failOnError>
-                            <failOnWarnings>false</failOnWarnings>
-                            <verbose>false</verbose>
-                        </configuration>
+<!--                        <configuration>-->
+<!--                            <failOnError>false</failOnError>-->
+<!--                            <failOnWarnings>false</failOnWarnings>-->
+<!--                            <verbose>false</verbose>-->
+<!--                        </configuration>-->
                         <executions>
                             <execution>
                                 <phase>install</phase>
@@ -511,7 +453,8 @@
                         <version>0.8.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <autoPublish>true</autoPublish>
+                            <autoPublish>false</autoPublish>
+                            <ignorePublishedComponents>true</ignorePublishedComponents>
                         </configuration>
                         <executions>
                             <execution>
@@ -526,14 +469,31 @@
 
 
     <!-- Share versions of some common dependencies -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.bytebuddy</groupId>
-                <artifactId>byte-buddy</artifactId>
-                <version>1.17.6</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>net.bytebuddy</groupId>-->
+<!--                <artifactId>byte-buddy</artifactId>-->
+<!--                <version>1.17.6</version>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.9.0</version>
+                <reportSets>
+                    <reportSet>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
