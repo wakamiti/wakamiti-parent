@@ -24,9 +24,10 @@ Para heredar este POM parent en un módulo, agrega lo siguiente a tu pom.xml:
 ```
 
 ## Perfiles
-- `check-updates`: Ejecuta `mvn -Pcheck-updates` para mostrar actualizaciones disponibles de dependencias, plugins, 
+- `check-updates`: Ejecuta `mvnw -Pcheck-updates` para mostrar actualizaciones disponibles de dependencias, plugins, 
   propiedades y parent POM.
-- `sonatype`: Ejecuta `mvn deploy -Psonatype` para preparar artefactos para despliegue en Sonatype.
+- `sonatype`: Ejecuta `mvnw deploy -Psonatype` para preparar artefactos para despliegue en Sonatype.
+- `jlink`: Ejecuta `mvnw initialize -Pjlink` para crear una imagen JRI personalizada.
 
 ## Contribuciones
 Para proponer cambios o añadir configuraciones comunes, contacta al equipo de desarrollo o sigue el proceso de 
