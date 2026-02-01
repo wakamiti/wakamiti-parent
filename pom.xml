@@ -357,7 +357,7 @@
                                     <goal>regex-property</goal>
                                 </goals>
                                 <configuration>
-                                    <name>jri.modules</name>
+                                    <name>jri.modules.arg</name>
                                     <value>${jri.modules}</value>
                                     <regex>[\r\n\t ]+</regex>
                                     <replacement></replacement>
