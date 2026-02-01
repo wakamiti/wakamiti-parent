@@ -373,6 +373,7 @@
                         <executions>
                             <execution>
                                 <id>jlink</id>
+                                <phase>initialize</phase>
                                 <goals><goal>exec</goal></goals>
                                 <configuration>
                                     <executable>${java.home}${file.separator}bin${file.separator}jlink</executable>
