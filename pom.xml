@@ -115,6 +115,7 @@
             jdk.unsupported
         </jri.modules>
         <jri.output>${project.basedir}${file.separator}.jri</jri.output>
+        <jlink.skip>false</jlink.skip>
     </properties>
 
 
@@ -346,7 +347,6 @@
             <activation>
                 <file>
                     <exists>${project.basedir}${file.separator}src</exists>
-                    <missing>${project.basedir}${file.separator}.jri</missing>
                 </file>
             </activation>
             <build>
@@ -382,6 +382,7 @@
                                 <phase>initialize</phase>
                                 <goals><goal>exec</goal></goals>
                                 <configuration>
+                                    <skip>${jlink.skip}</skip>
                                     <executable>${java.home}${file.separator}bin${file.separator}jlink</executable>
                                     <arguments>
                                         <argument>--strip-debug</argument>
@@ -408,6 +409,9 @@
                     <exists>${project.basedir}${file.separator}.jri</exists>
                 </file>
             </activation>
+            <properties>
+                <jlink.skip>true</jlink.skip>
+            </properties>
             <build>
                 <plugins>
                     <!-- Surefire with JaCoCo agent -->
