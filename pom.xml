@@ -343,6 +343,12 @@
         <!-- To create a reduced jri image -->
         <profile>
             <id>jlink</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}${file.separator}src</exists>
+                    <missing>${project.basedir}${file.separator}.jri</missing>
+                </file>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
