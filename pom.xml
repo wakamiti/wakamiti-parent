@@ -346,7 +346,7 @@
             <id>jlink</id>
             <activation>
                 <file>
-                    <exists>${project.basedir}${file.separator}src</exists>
+                    <exists>${project.basedir}${file.separator}src${file.separator}test${file.separator}java</exists>
                 </file>
             </activation>
             <build>
