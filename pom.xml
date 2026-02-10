@@ -114,7 +114,7 @@
             jdk.localedata,
             jdk.unsupported
         </jri.modules>
-        <jri.output>${project.basedir}${file.separator}.jri</jri.output>
+        <jri.output>${project.basedir}${file.separator}.jri-${os.detected.name}</jri.output>
         <jlink.skip>false</jlink.skip>
     </properties>
 
@@ -122,6 +122,28 @@
 
     <!-- basic build features -->
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version>
+            </extension>
+            <!--
+                ${os.detected.name}:
+                    - windows
+                    - linux
+                    - osx
+                    - solaris
+                    - freebsd
+                ${os.detected.arch}:
+                    - x86_64 (64 bits = amd64)
+                    - x86_32 (32 bits = x86)
+                    - aarch_64 (ARM 64 bits = Apple Silicon M1/M2/M3 or modern Raspberry Pi)
+                    - ppc_64 (PowerPC 64 bits)
+                ${os.detected.classifier}: ${os.detected.name}-${os.detected.arch}
+            -->
+        </extensions>
+
         <pluginManagement>
             <plugins>
                 <plugin>
