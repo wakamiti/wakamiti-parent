@@ -114,7 +114,7 @@
             jdk.localedata,
             jdk.unsupported
         </jri.modules>
-        <jri.output>${project.basedir}${file.separator}.jri-${os.detected.name}</jri.output>
+        <jri.output>${project.basedir}${file.separator}.jri-${os.detected.classifier}</jri.output>
         <jlink.skip>false</jlink.skip>
     </properties>
 
