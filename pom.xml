@@ -203,7 +203,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.test.version}</version>
                     <configuration>
-                        <jvm>${project.basedir}${file.separator}.jri${file.separator}bin${file.separator}java</jvm>
+                        <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
                         <argLine>@{surefireJacocoAgent} ${test.args}</argLine>
                         <includes>
                             <include>${surefire.pattern}</include>
@@ -223,7 +223,7 @@
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
-                                <jvm>${project.basedir}${file.separator}.jri${file.separator}bin${file.separator}java</jvm>
+                                <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
                                 <argLine>@{failsafeJacocoAgent} ${test.args}</argLine>
                                 <includes>
                                     <include>${failsafe.pattern}</include>
