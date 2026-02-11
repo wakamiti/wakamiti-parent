@@ -98,7 +98,7 @@
         <project.repository>${project.artifactId}</project.repository>
 
         <!-- Timestamp for reproducible output archive entries -->
-        <project.build.outputTimestamp>2025-01-01T00:00:00Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-01-01T00:00:00Z</project.build.outputTimestamp>
 
         <!-- JLink modules list -->
         <jri.modules>
@@ -114,11 +114,9 @@
             jdk.localedata,
             jdk.unsupported
         </jri.modules>
-        <jri.output>${project.basedir}${file.separator}.jri-${os.detected.classifier}</jri.output>
-        <jlink.skip>false</jlink.skip>
+        <jri.root>${maven.multiModuleProjectDirectory}</jri.root>
+        <jri.output>${jri.root}${file.separator}.jri-${os.detected.classifier}</jri.output>
     </properties>
-
-
 
     <!-- basic build features -->
     <build>
@@ -364,44 +362,34 @@
         </profile>
 
         <profile>
-            <id>skip-test</id>
+            <id>do-test</id>
             <activation>
-                <property>
-                    <name>skipTests</name>
-                    <value>true</value>
-                </property>
+                <file>
+                    <exists>${project.basedir}${file.separator}src${file.separator}test${file.separator}java</exists>
+                </file>
             </activation>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-        </profile>
-        <profile>
-            <id>skip-test-2</id>
-            <activation>
-                <property>
-                    <name>maven.test.skip</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
-        </profile>
-
-        <!-- To create a reduced jri image -->
-        <profile>
-            <id>jlink</id>
-            <activation><file><exists>${jri.output}</exists></file></activation>
-            <properties>
-                <jlink.skip>true</jlink.skip>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>tests</id>
-            <activation><file><exists>${project.build.testSourceDirectory}</exists></file></activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>detect-jri-output</id>
+                                <phase>initialize</phase>
+                                <goals><goal>run</goal></goals>
+                                <configuration>
+                                    <exportAntProperties>true</exportAntProperties>
+                                    <target>
+                                        <available file="${jri.output}" property="jlink.skip" />
+                                        <echo level="info">jri.output=${jri.output}</echo>
+                                        <echo level="info">jlink.skip=${jlink.skip}</echo>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -593,6 +581,31 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>skip-test</id>
+            <activation>
+                <property>
+                    <name>skipTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>skip-test-2</id>
+            <activation>
+                <property>
+                    <name>maven.test.skip</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
         </profile>
     </profiles>
 
