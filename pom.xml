@@ -391,11 +391,7 @@
         <!-- To create a reduced jri image -->
         <profile>
             <id>jlink</id>
-            <activation>
-                <file>
-                    <exists>${project.basedir}${file.separator}.jri</exists>
-                </file>
-            </activation>
+            <activation><file><exists>${jri.output}</exists></file></activation>
             <properties>
                 <jlink.skip>true</jlink.skip>
             </properties>
