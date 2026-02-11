@@ -399,11 +399,7 @@
 
         <profile>
             <id>tests</id>
-            <activation>
-                <file>
-                    <exists>${project.basedir}${file.separator}src${file.separator}test${file.separator}java</exists>
-                </file>
-            </activation>
+            <activation><file><exists>${project.build.testSourceDirectory}</exists></file></activation>
             <build>
                 <plugins>
                     <plugin>
