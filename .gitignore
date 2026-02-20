@@ -40,6 +40,6 @@ nb-configuration.xml
 .env
 
 .go
-.jri
+.jri*
 # TLS Certificates
 .certs/
