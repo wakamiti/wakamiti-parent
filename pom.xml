@@ -85,6 +85,8 @@
         </test.args>
         <surefire.pattern>**/*Test.java</surefire.pattern>
         <failsafe.pattern>**/*IT.java</failsafe.pattern>
+        <surefireJacocoAgent/>
+        <failsafeJacocoAgent/>
 
         <!-- plugin versions -->
         <jacoco.version>0.8.14</jacoco.version>
@@ -202,7 +204,7 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>@{surefireJacocoAgent} ${test.args}</argLine>
+                        <argLine>${surefireJacocoAgent} ${test.args}</argLine>
                         <includes>
                             <include>${surefire.pattern}</include>
                         </includes>
@@ -216,11 +218,19 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>@{failsafeJacocoAgent} ${test.args}</argLine>
+                        <argLine>${failsafeJacocoAgent} ${test.args}</argLine>
                         <includes>
                             <include>${failsafe.pattern}</include>
                         </includes>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <!-- JaCoCo coverage -->
