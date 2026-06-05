@@ -203,7 +203,7 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>${surefireJacocoAgent} ${test.args}</argLine>
+                        <argLine>@{surefireJacocoAgent} ${test.args}</argLine>
                         <includes>
                             <include>${surefire.pattern}</include>
                         </includes>
@@ -217,7 +217,7 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>${failsafeJacocoAgent} ${test.args}</argLine>
+                        <argLine>@{failsafeJacocoAgent} ${test.args}</argLine>
                         <includes>
                             <include>${failsafe.pattern}</include>
                         </includes>
@@ -262,7 +262,7 @@
                         </execution>
                         <execution>
                             <id>generate-test-report</id>
-                            <phase>post-integration-test</phase>
+                            <phase>verify</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>
@@ -395,30 +395,29 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <executions>
-                            <execution>
-                                <id>detect-jri-output</id>
-                                <phase>initialize</phase>
-                                <goals><goal>run</goal></goals>
-                                <configuration>
-                                    <exportAntProperties>true</exportAntProperties>
-                                    <target>
-                                        <available file="${jri.output}" property="jlink.skip" />
-                                        <echo level="info">jri.output=${jri.output}</echo>
-                                        <echo level="info">jlink.skip=${jlink.skip}</echo>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <version>3.6.1</version>
                         <executions>
+                            <execution>
+                                <id>detect-jri-output</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>bsh-property</goal>
+                                </goals>
+                                <configuration>
+                                    <source><![CDATA[
+                                        String jriOutput = session.getExecutionRootDirectory()
+                                                + java.io.File.separator
+                                                + ".jri-"
+                                                + project.getProperties().getProperty("os.detected.classifier");
+                                        boolean jriExists = new java.io.File(jriOutput).exists();
+                                        session.getUserProperties().setProperty("exec.skip", Boolean.toString(jriExists));
+                                        log.info("jri.output=" + jriOutput);
+                                        log.info("exec.skip=" + session.getUserProperties().getProperty("exec.skip"));
+                                    ]]></source>
+                                </configuration>
+                            </execution>
                             <execution>
                                 <id>flatten-jri-modules</id>
                                 <phase>initialize</phase>
@@ -445,7 +444,6 @@
                                 <phase>initialize</phase>
                                 <goals><goal>exec</goal></goals>
                                 <configuration>
-                                    <skip>${jlink.skip}</skip>
                                     <executable>${java.home}${file.separator}bin${file.separator}jlink</executable>
                                     <arguments>
                                         <argument>--strip-debug</argument>
