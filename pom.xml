@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
+  ~ Copyright (c) 2022-2026 Instituto Tecnológico de Informática (ITI)
+  ~
   ~ This Source Code Form is subject to the terms of the Mozilla Public
   ~ License, v. 2.0. If a copy of the MPL was not distributed with this
   ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -17,13 +18,11 @@
         The version number will always be the same regardless of the versions of the components.
     -->
 
-    <!-- coordinates -->
     <groupId>es.wakamiti</groupId>
     <artifactId>wakamiti-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <!-- additional information -->
     <name>Wakamiti Parent</name>
     <description>Parent POM for sharing build configuration among Wakamiti components</description>
     <url>https://github.com/wakamiti/${project.repository}</url>
@@ -70,7 +69,7 @@
 
         <!-- build versions -->
         <java.version>25</java.version>
-        <maven.version>3.9.12</maven.version>
+        <maven.version>3.9.16</maven.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -90,7 +89,7 @@
 
         <!-- plugin versions -->
         <jacoco.version>0.8.14</jacoco.version>
-        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
 
         <!-- sonar cloud -->
         <sonar.organization>iti-ict</sonar.organization>
@@ -164,7 +163,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
@@ -352,7 +351,7 @@
                     <plugin>
                         <groupId>org.sonarsource.scanner.maven</groupId>
                         <artifactId>sonar-maven-plugin</artifactId>
-                        <version>5.5.0.6356</version>
+                        <version>5.7.0.6970</version>
                     </plugin>
                 </plugins>
             </build>
@@ -398,7 +397,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.0</version>
                         <executions>
                             <execution>
                                 <id>detect-jri-output</id>
