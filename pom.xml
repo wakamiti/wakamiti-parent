@@ -76,18 +76,18 @@
 
         <!-- Test execution -->
         <maven.test.version>3.5.4</maven.test.version>
-        <test.args>
-            -XX:+EnableDynamicAgentLoading
-            -Dfile.encoding=${project.build.sourceEncoding}
-            --add-opens java.base/java.util=ALL-UNNAMED
-            --add-opens java.base/java.lang=ALL-UNNAMED
-        </test.args>
-        <surefire.pattern>**/test/**/*Test.java</surefire.pattern>
-        <failsafe.pattern>**/it/**/*Test.java</failsafe.pattern>
+<!--        <test.args>-->
+<!--            -XX:+EnableDynamicAgentLoading-->
+<!--            -Dfile.encoding=${project.build.sourceEncoding}-->
+<!--            &#45;&#45;add-opens java.base/java.util=ALL-UNNAMED-->
+<!--            &#45;&#45;add-opens java.base/java.lang=ALL-UNNAMED-->
+<!--        </test.args>-->
+        <test.args/>
+        <surefire.pattern>**/*Test.java</surefire.pattern>
+        <failsafe.pattern>**/*IT.java</failsafe.pattern>
         <surefireJacocoAgent/>
         <failsafeJacocoAgent/>
         <jacoco.coverage>0.85</jacoco.coverage>
-        <it.test.outputDirectory>${project.build.directory}/it-classes</it.test.outputDirectory>
 
         <!-- plugin versions -->
         <jacoco.version>0.8.14</jacoco.version>
@@ -96,6 +96,11 @@
         <!-- sonar cloud -->
         <sonar.organization>iti-ict</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <!-- sonar exclusions: -->
+        <!-- java:S1186 - empty methods in tests -->
+        <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S1186</sonar.issue.ignore.multicriteria.e1.ruleKey>
+        <sonar.issue.ignore.multicriteria.e1.resourceKey>**/src/test/java/**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
 
         <!-- By default -->
         <project.repository>${project.artifactId}</project.repository>
@@ -155,37 +160,10 @@
                         <release>${maven.compiler.release}</release>
                         <verbose>${verbose}</verbose>
                         <compilerArgs>
-                            <arg>
-                                -Xlint:-missing-explicit-ctor
-                            </arg>
+                            <arg>-Xlint:-missing-explicit-ctor</arg>
                         </compilerArgs>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-testCompile</id>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                            <configuration>
-                                <useModulePath>false</useModulePath>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>compile-integration-tests</id>
-                            <phase>process-test-classes</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                            <configuration>
-                                <useModulePath>true</useModulePath>
-                                <compileSourceRoots>
-                                    <compileSourceRoot>${project.basedir}/src/it/java</compileSourceRoot>
-                                </compileSourceRoots>
-                                <outputDirectory>${it.test.outputDirectory}</outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -194,23 +172,6 @@
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>copy-integration-test-resources</id>
-                            <phase>process-test-resources</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${it.test.outputDirectory}</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.basedir}/src/it/resources</directory>
-                                    </resource>
-                                </resources>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
 
                 <!-- dependency convergence enforce -->
@@ -247,11 +208,12 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>@{surefireJacocoAgent}</argLine>
+                        <argLine>
+                            @{surefireJacocoAgent} -Xshare:off -XX:+EnableDynamicAgentLoading ${test.args}
+                        </argLine>
                         <includes>
                             <include>${surefire.pattern}</include>
                         </includes>
-                        <useModulePath>false</useModulePath>
                     </configuration>
                 </plugin>
 
@@ -262,11 +224,12 @@
                     <version>${maven.test.version}</version>
                     <configuration>
                         <jvm>${jri.output}${file.separator}bin${file.separator}java</jvm>
-                        <argLine>@{failsafeJacocoAgent}</argLine>
+                        <argLine>
+                            @{failsafeJacocoAgent} -Xshare:off -XX:+EnableDynamicAgentLoading ${test.args}
+                        </argLine>
                         <includes>
                             <include>${failsafe.pattern}</include>
                         </includes>
-                        <testClassesDirectory>${it.test.outputDirectory}</testClassesDirectory>
                     </configuration>
                     <executions>
                         <execution>
@@ -307,32 +270,13 @@
                             </configuration>
                         </execution>
                         <execution>
-                            <id>merge-coverage-data</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>merge</goal>
-                            </goals>
-                            <configuration>
-                                <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
-                                <fileSets>
-                                    <fileSet>
-                                        <directory>${project.build.directory}</directory>
-                                        <includes>
-                                            <include>jacoco.exec</include>
-                                            <include>jacoco-it.exec</include>
-                                        </includes>
-                                    </fileSet>
-                                </fileSets>
-                            </configuration>
-                        </execution>
-                        <execution>
                             <id>generate-test-report</id>
                             <phase>verify</phase>
                             <goals>
                                 <goal>report</goal>
                             </goals>
                             <configuration>
-                                <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
                             </configuration>
                         </execution>
                         <execution>
@@ -342,7 +286,7 @@
                                 <goal>check</goal>
                             </goals>
                             <configuration>
-                                <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
+                                <dataFile>${project.build.directory}/jacoco.exec</dataFile>
                                 <rules>
                                     <rule>
                                         <element>BUNDLE</element>
